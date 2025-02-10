@@ -3,6 +3,7 @@ from pages.locators import create_account_locators as loc
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 import logging
+import allure
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -10,6 +11,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 class CreateAccountPage(BasePage):
     current_page = "/customer/account/create/"
 
+    @allure.step("Заполняем форму данными")
     def fill_the_form(self, name='', last_name='', email='', password=''):
         wait = WebDriverWait(self.driver, 10)
         wait.until(ec.element_to_be_clickable(loc.cookie_agree_button_loc))
@@ -28,10 +30,12 @@ class CreateAccountPage(BasePage):
         password_field.send_keys(password)
         confirm_password.send_keys(password)
 
+    @allure.step('Нажимаем кнопку регистрации')
     def click_on_button(self):
         create_account_button = self.find(loc.create_account_button_loc)
         create_account_button.click()
 
+    @allure.step('Проверяем валидацию обязательных полей')
     def check_required_fields_validation(self):
         first_name_error = self.find(loc.first_name_error_loc)
         last_name_error = self.find(loc.last_name_error_loc)
@@ -46,7 +50,7 @@ class CreateAccountPage(BasePage):
         assert confirm_error.text == error_text_message, f"{confirm_error.text} IS NOT {error_text_message}"
         logging.info(f"ALL THE REQUIRED FIELDS IS EMPTY - OK IN THIS CASE")
 
-
+    @allure.step("Проверяем успешность регистрации")
     def check_successful_registration(self, name, last_name, email):
         successful_registration_alert = self.find(loc.successful_registration_alert_loc)
         contact_information = self.find(loc.contact_information_loc)
@@ -57,6 +61,7 @@ class CreateAccountPage(BasePage):
         )
         logging.info(f"ALL INFORMATION IS CORRECT")
 
+    @allure.step("Проверяем регистрацию с существующим email")
     def check_registration_already_email(self, error_text):
         error_message_email = self.find(loc.error_message_email_loc)
         assert error_text in error_message_email.text
