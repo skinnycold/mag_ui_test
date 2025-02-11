@@ -19,3 +19,4 @@ successful_registration_alert_loc = (By.CSS_SELECTOR, "[class='page messages']")
 contact_information_loc = (By.XPATH, "//div[@class='box box-information']//div[@class='box-content']")
 
 cookie_agree_button_loc = (By.CSS_SELECTOR, "[class=' css-1n36tvh']")
+error_message_email_loc = (By.XPATH,"//div[@class='message-error error message']//div")
